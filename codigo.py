@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import sys
+import sqlite3
 
 def testar():
     tela.withdraw()
