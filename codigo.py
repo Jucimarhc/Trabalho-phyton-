@@ -62,7 +62,7 @@ def fechar():
 def criar_tela():
     global tela, wallpaper
     tela = tk.Tk()
-    tela.geometry("800x600+350+200")
+    tela.geometry("1600x900")
     tela.resizable(False,False)
     tela.title("RAD")
 
@@ -88,9 +88,18 @@ def criar_menu():
     opcoes_menu.add_command(label="Editar")
     opcoes_menu.add_command(label="Adicionar", command=adicionar_tela)
 
+def botao2teste():
+    login = entrada_usuario1.get()
+    senha = entrada_senha1.get()
+    nome = entrada_nome1.get()
+    inserir_dado(login, senha, nome)
+
+
+
+
 def adicionar_tela():
     
-    global tela_adicionar, label5, igualsenha1, igualsenha2, botao2, botao3, entrada_usuario1, entrada_senha1, entrada_confirmar, botao2
+    global tela_adicionar, label5, igualsenha1, igualsenha2, botao2, botao3, entrada_usuario1, entrada_senha1, entrada_nome1, botao2
     tela_adicionar = tk.Toplevel(master=tela)
     tela_adicionar.title("Adicionando Usuário")
     tela_adicionar.geometry("400x300+700+200")
@@ -98,27 +107,33 @@ def adicionar_tela():
     tela_adicionar.transient(tela)
     
 
-    igualsenha1 = tk.StringVar()
-    igualsenha2 = tk.StringVar()
+    entrada_senha1= tk.StringVar()
+    entrada_nome1 = tk.StringVar()
     entrada_usuario1 = tk.StringVar()
 
     label5 = tk.Label(tela_adicionar, text="Usuário")
     label5.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
     entrada_usuario1 = tk.Entry(tela_adicionar)
     entrada_usuario1.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
+
     label6 = tk.Label(tela_adicionar, text="Senha")
     label6.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
-    entrada_senha1 = tk.Entry(tela_adicionar, textvariable=igualsenha1)
+    entrada_senha1 = tk.Entry(tela_adicionar)
     entrada_senha1.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-    label7 = tk.Label(tela_adicionar, text="Confirmar Senha")
+
+    label7 = tk.Label(tela_adicionar, text="Nome")
     label7.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
-    entrada_confirmar = tk.Entry(tela_adicionar, textvariable=igualsenha2)
-    entrada_confirmar.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
-    botao2 = tk.Button(tela_adicionar, text="Salvar", width=10, height=1, bg="#80ff80", activebackground="#b3ffb3")
+    entrada_nome1 = tk.Entry(tela_adicionar)
+    entrada_nome1.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
+
+    botao2 = tk.Button(tela_adicionar, text="Salvar", width=10, height=1, bg="#80ff80", activebackground="#b3ffb3", command=botao2teste)
     botao2.place(relx=0.2, rely=0.8)
+
     tela_adicionar.bind('<Return>', pressionar_enter1)
+
     botao3 = tk.Button(tela_adicionar, text="Cancelar", width=10, height=1, command=fechar_adicionar, bg="#ff3333", activebackground="#ff6666")
     botao3.place(relx=0.6, rely=0.8)
+
 
 criar_tela()
 login()
