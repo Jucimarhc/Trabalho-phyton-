@@ -1,15 +1,21 @@
 import sqlite3
-def inserir_dado():
-    
-    print("rodoufo acrescentou algo util")
-    conn = sqlite3.connect('Banco_PY.db')
+import threading
 
-    cursor = conn.cursor()
+# Cria um objeto de bloqueio
+lock = threading.Lock()
 
-    inserir_dados = '''INSERT INTO Funcionario VALUES ('1','ADMIN','ADMIN','Ateb@2022');
+def inserir_dado(login, senha, nome):
+    print("Rodou e acrescentou algo útil")
 
-    '''
-    cursor.execute(inserir_dados)
+    with lock:  # Adquire o bloqueio
+        conn = sqlite3.connect('Banco_PY.db')
+        cursor = conn.cursor()
 
-    conn.commit()
-    conn.close()
+        inserir_dados = '''INSERT INTO Funcionario (login, nome, senha) VALUES (?, ?, ?);'''
+        dados = (login, nome, senha)
+        
+        cursor.execute(inserir_dados, dados)
+
+        conn.commit()
+        conn.close()
+        # O bloqueio é liberado automaticamente quando o contexto é encerrado
