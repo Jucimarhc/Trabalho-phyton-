@@ -69,9 +69,6 @@ def login():
 def pressionar_enter(event):
     botao1.invoke()
 
-def pressionar_enter1(event):
-    botao3.invoke()
-
 def fechar():
     tela_login.destroy()
     sys.exit()
@@ -107,12 +104,19 @@ def botao3teste():
     criar_login = entrada_usuario1.get()
     criar_senha = entrada_senha1.get()
     criar_nome = entrada_nome1.get()
-
-    if login_existe(criar_login):
-        messagebox.showerror("Erro", "O login já existe")
+    if criar_login.strip() == '' or criar_senha.strip() == '' or criar_nome.strip() == '':
+        messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
+        criar_login.focus()
     else:
-        inserir_dado(criar_login, criar_senha, criar_nome)
-        fechar_adicionar()
+        if login_existe(criar_login):
+            messagebox.showerror("Erro", "O login já existe")
+            entrada_usuario1.delete(0, tk.END)
+            entrada_senha1.delete(0, tk.END)
+            criar_login.focus()
+        else:
+            inserir_dado(criar_login, criar_senha, criar_nome)
+            messagebox.showinfo("Sucesso!","Novo login adicionado!")
+            fechar_adicionar()
 
 def adicionar_tela():
     
@@ -149,8 +153,6 @@ def adicionar_tela():
     botao3 = tk.Button(tela_adicionar, text="Cancelar", width=10, height=1, command=fechar_adicionar, bg="#ff3333", activebackground="#ff6666")
     botao3.place(relx=0.6, rely=0.8)
 
-    tela_adicionar.bind('<Return>', pressionar_enter1)
-    
 criar_tela()
 tela.withdraw()
 login()
