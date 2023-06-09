@@ -1,0 +1,28 @@
+def excluir_dado():
+    # Conexão com o banco de dados
+    conn = sqlite3.connect('Banco_PY.db')
+    cursor = conn.cursor()
+
+    # Capturar o dado a ser excluído
+    dado_para_excluir = usuario_del.get()
+
+    # Executar o comando de exclusão na tabela
+    cursor.execute("DELETE FROM Funcionario WHERE login=?", (dado_para_excluir,))
+
+    # Salvar as alterações e fechar a conexão
+    conn.commit()
+    conn.close()
+
+    # Exibir mensagem de sucesso ou atualizar a interface gráfica
+    label_status.config(text="Dado excluído com sucesso!")
+
+def pressionar_enter_delete(event):
+    excluir_dado()
+
+# Restante do código...
+
+botao_enter_del = tk.Button(tela_deletar, text="Enter", width=10, height=1, command=excluir_dado)
+botao_enter_del.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
+tela_deletar.bind('<Return>', pressionar_enter_delete)
+
+# Restante do código...
