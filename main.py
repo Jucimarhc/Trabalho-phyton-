@@ -15,7 +15,8 @@ from tkinter import ttk
 #----------------------------Funções-------------------------------------------------#
 from verify import login_existe, placa_existe, cpf_existe, cpf_existe_nao
 from inserir import inserir_dado, inserir_veiculo, inserir_usuario
-from deletar import excluir_dado
+from deletar import excluir_dado, excluir_user
+from refresh import atualizar_treeview
 
 def verificar_login():
     
@@ -320,7 +321,7 @@ def criar_menu():
     tela.config(menu=menubar) 
     
     add_menu.add_command(label="Adicionar Usuário", command=usuario_tela)
-    add_menu.add_command(label="Remover Usuário")
+    add_menu.add_command(label="Remover Usuário", command=remover_usuario_tela)
     add_menu.add_command(label="Adicionar Login", command=adicionar_tela)
     add_menu.add_command(label="Remover Login", command=deletar_tela)
     add_menu.add_command(label="Log Out", command=voltar_tela_anterior)   
@@ -481,6 +482,42 @@ def botao_usuario():
             messagebox.showinfo("Sucesso!","Novo usuário adicionado!")
             fechar_usuario()
 
+def remover_usuario_tela():
+    global tela_deletar_usuario, botao_enter_del_user, resultado_del_usuario, usuario_del_user, entrada_del_user
+
+    def pressionar_enter_delete(event):
+        botao_enter_del_user.invoke()
+
+    tela_deletar_usuario = tk.Toplevel(master=tela)
+    tela_deletar_usuario.title("Deletando Usuário")
+    tela_deletar_usuario.geometry("400x300+700+200")
+    tela_deletar_usuario.resizable(0,0)
+    tela_deletar_usuario.transient(tela)
+    
+    usuario_del_user = tk.StringVar()
+    
+    label_del_nome = tk.Label(tela_deletar_usuario, text="Digite o CPF do usuário:")
+    label_del_nome.place(relx=0.25, rely=0.1, anchor=tk.CENTER)
+    entrada_del_user = tk.Entry(tela_deletar_usuario, textvariable=usuario_del_user)
+    entrada_del_user.place(relx=0.2, rely=0.2, anchor=tk.CENTER)
+
+    botao_enter_del_user = tk.Button(tela_deletar_usuario, text="Enter", fg="#FFFFFF", bg="#215470", activebackground="#FFFFFF", width=10, height=1, command=botao_del_user)
+    botao_enter_del_user.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
+    tela_deletar_usuario.bind('<Return>', pressionar_enter_delete)
+
+def botao_del_user():
+    global deletar_cpf, usuario_del_user
+
+    deletar_cpf = usuario_del_user.get()
+
+    if deletar_cpf.strip() == '':
+        messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
+    elif cpf_existe_nao(deletar_cpf):
+        excluir_user(deletar_cpf)
+        atualizar_treeview(tree)
+    else:
+        messagebox.showerror("Erro!", "Usuario não existente. Digite novamente.")
+    
 def atualizar_tela():
     global fechar_atualizar, tela_atualizar, entrada_placa_veiculo1, entrada_modelo_veiculo1, entrada_entrada_veiculo1, entrada_saida_veiculo1, entrada_dono_veiculo1
 
