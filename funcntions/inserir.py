@@ -36,3 +36,17 @@ def inserir_veiculo(placa,modelo,entrada,saida,dono):
 
         conn.commit()
         conn.close()
+
+def inserir_usuario(cpf,nome,telefone):
+
+    with lock:  # Adquire o bloqueio
+        conn = sqlite3.connect(caminho_bd)
+        cursor = conn.cursor()
+
+        inserir_dados_usuario = '''INSERT INTO Usuario (cpf, nome, telefone) VALUES (?, ?, ?);'''
+        dados_usuario = (cpf,nome,telefone)
+
+        cursor.execute(inserir_dados_usuario, dados_usuario)
+
+        conn.commit()
+        conn.close()

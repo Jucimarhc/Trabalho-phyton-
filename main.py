@@ -13,8 +13,8 @@ from pathlib import Path
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox, font
 from tkinter import ttk
 #----------------------------Funções-------------------------------------------------#
-from verify import login_existe, placa_existe
-from inserir import inserir_dado, inserir_veiculo
+from verify import login_existe, placa_existe, cpf_existe, cpf_existe_nao
+from inserir import inserir_dado, inserir_veiculo, inserir_usuario
 from deletar import excluir_dado
 
 def verificar_login():
@@ -282,7 +282,7 @@ def veiculo_tela():
     botao_veiculo2.place(relx=0.6, rely=0.8)
 
 def botao_veiculo():
-    global criar_placa
+    global criar_placa, criar_dono
     
     criar_placa = entrada_placa_veiculo.get()
     criar_modelo = entrada_modelo_veiculo.get()
@@ -300,11 +300,16 @@ def botao_veiculo():
             entrada_placa_veiculo.delete(0, tk.END)
             criar_placa.focus()
         else:
-            inserir_veiculo(criar_placa, criar_modelo, criar_entrada, criar_saida, criar_dono)
-            messagebox.showinfo("Sucesso!","Novo cadastro de veiculo adicionado!")
-            fechar_veiculo()
-            adicionar_dado()
-            buscar_tabela_veiculo()
+            if cpf_existe(criar_dono):
+                messagebox.showerror("Erro", "CPF não encontrado, Por favor Cadastre um novo Usuário")
+                entrada_dono_veiculo.delete(0, tk.END)
+                criar_dono.focus()
+            else:
+                inserir_veiculo(criar_placa, criar_modelo, criar_entrada, criar_saida, criar_dono)
+                messagebox.showinfo("Sucesso!","Novo cadastro de veiculo adicionado!")
+                fechar_veiculo()
+                adicionar_dado()
+                buscar_tabela_veiculo()
         
 def criar_menu():
     menubar = tk.Menu(tela)
@@ -314,7 +319,7 @@ def criar_menu():
     
     tela.config(menu=menubar) 
     
-    add_menu.add_command(label="Adicionar Usuário")
+    add_menu.add_command(label="Adicionar Usuário", command=usuario_tela)
     add_menu.add_command(label="Remover Usuário")
     add_menu.add_command(label="Adicionar Login", command=adicionar_tela)
     add_menu.add_command(label="Remover Login", command=deletar_tela)
@@ -364,7 +369,7 @@ def adicionar_tela():
         tela_adicionar.destroy()
     
     tela_adicionar = tk.Toplevel(master=tela)
-    tela_adicionar.title("Adicionar Admin")
+    tela_adicionar.title("Adicionar Login")
     tela_adicionar.geometry("400x300+700+200")
     tela_adicionar.resizable(0,0)
     tela_adicionar.transient(tela)
@@ -416,6 +421,65 @@ def deletar_tela():
     botao_enter_del = tk.Button(tela_deletar, text="Enter", fg="#FFFFFF", bg="#215470", activebackground="#FFFFFF", width=10, height=1, command=botao_del_teste)
     botao_enter_del.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
     tela_deletar.bind('<Return>', pressionar_enter_delete)
+
+def usuario_tela():
+
+    global tela_usuario, entrada_cpf, entrada_nome_usuario, entrada_telefone, fechar_usuario
+
+    tela_usuario = tk.Toplevel(master=tela)
+    tela_usuario.title("Adicionar Usuario")
+    tela_usuario.geometry("400x300+700+200")
+    tela_usuario.resizable(0,0)
+    tela_usuario.transient(tela)
+
+    def fechar_usuario():
+        tela_usuario.destroy()
+
+    entrada_cpf= tk.StringVar()
+    entrada_nome_usuario = tk.StringVar()
+    entrada_telefone = tk.StringVar()
+
+    label_CPF = tk.Label(tela_usuario, text="CPF")
+    label_CPF.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
+    entrada_cpf = tk.Entry(tela_usuario)
+    entrada_cpf.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
+
+    label_nome = tk.Label(tela_usuario, text="Nome")
+    label_nome.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
+    entrada_nome_usuario = tk.Entry(tela_usuario)
+    entrada_nome_usuario.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+
+    label_telefone = tk.Label(tela_usuario, text="Telefone")
+    label_telefone.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    entrada_telefone = tk.Entry(tela_usuario)
+    entrada_telefone.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
+
+    botao_usuario1 = tk.Button(tela_usuario, text="Salvar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=botao_usuario)
+    botao_usuario1.place(relx=0.2, rely=0.80)
+
+    botao_usuario2 = tk.Button(tela_usuario, text="Cancelar", fg="#FFFFFF", width=10, height=1, command=fechar_usuario, bg="#215470", activebackground="#FFFFFF")
+    botao_usuario2.place(relx=0.6, rely=0.80)
+
+def botao_usuario():
+    global criar_cpf, criar_nome_usuario, criar_telefone
+    
+    criar_cpf = entrada_cpf.get()
+    criar_nome_usuario = entrada_nome_usuario.get()
+    criar_telefone = entrada_telefone.get()
+
+
+    if criar_cpf.strip() == '' or criar_nome_usuario.strip() == '' or criar_telefone.strip() == '':
+        messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
+        criar_cpf.focus()
+    else:
+        if cpf_existe_nao(criar_cpf):
+            messagebox.showerror("Erro", "CPF ja cadastrado!")
+            entrada_cpf.delete(0, tk.END)
+            criar_cpf.focus()
+        else:
+            inserir_usuario(criar_cpf, criar_nome_usuario, criar_telefone)
+            messagebox.showinfo("Sucesso!","Novo usuário adicionado!")
+            fechar_usuario()
 
 criar_tela()
 tela.withdraw()
