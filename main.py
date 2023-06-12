@@ -178,7 +178,7 @@ def criar_tela():
         image=button_image_3,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_atualizar clicked"),
+        command=lambda: (print("button_atualizar clicked"), conferir()),
         relief="flat"
     )
     button_3.place(
@@ -480,6 +480,86 @@ def botao_usuario():
             inserir_usuario(criar_cpf, criar_nome_usuario, criar_telefone)
             messagebox.showinfo("Sucesso!","Novo usuário adicionado!")
             fechar_usuario()
+
+def atualizar_tela():
+    global fechar_atualizar, tela_atualizar, entrada_placa_veiculo1, entrada_modelo_veiculo1, entrada_entrada_veiculo1, entrada_saida_veiculo1, entrada_dono_veiculo1
+
+    def fechar_atualizar():
+        tela_atualizar.destroy()
+    
+    tela_atualizar = tk.Toplevel(master=tela)
+    tela_atualizar.title("Adicionar Admin")
+    tela_atualizar.geometry("400x400+700+200")
+    tela_atualizar.resizable(0,0)
+    tela_atualizar.transient(tela)
+
+    entrada_placa_veiculo1= tk.StringVar()
+    entrada_modelo_veiculo1 = tk.StringVar()
+    entrada_entrada_veiculo1 = tk.StringVar()
+    entrada_saida_veiculo1 = tk.StringVar()
+
+    label_veiculo11 = tk.Label(tela_atualizar, text="Placa")
+    label_veiculo11.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
+    entrada_placa_veiculo1 = tk.Entry(tela_atualizar)
+    entrada_placa_veiculo1.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
+
+    label_veiculo21 = tk.Label(tela_atualizar, text="Modelo")
+    label_veiculo21.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
+    entrada_modelo_veiculo1 = tk.Entry(tela_atualizar)
+    entrada_modelo_veiculo1.place(relx=0.5, rely=0.25, anchor=tk.CENTER)
+
+    label_veiculo31 = tk.Label(tela_atualizar, text="Horário de entrada")
+    label_veiculo31.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
+    entrada_entrada_veiculo1 = tk.Entry(tela_atualizar)
+    entrada_entrada_veiculo1.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
+
+    label_veiculo41 = tk.Label(tela_atualizar, text="Horário de saída")
+    label_veiculo41.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    entrada_saida_veiculo1 = tk.Entry(tela_atualizar)
+    entrada_saida_veiculo1.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
+
+    botao_veiculo11 = tk.Button(tela_atualizar, text="Salvar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=botao_atualizar)
+    botao_veiculo11.place(relx=0.2, rely=0.8)
+
+    botao_veiculo21 = tk.Button(tela_atualizar, text="Cancelar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=fechar_atualizar)
+    botao_veiculo21.place(relx=0.6, rely=0.8)
+
+def conferir():
+
+    global selecionado
+    selecionado = tree.selection()
+    if selecionado:
+        atualizar_tela()
+    else:
+        messagebox.showerror("Erro","Nenhum dado da tabela foi selecionado!")
+
+def botao_atualizar():
+    # Obter os valores do item selecionado
+    valores = tree.item(selecionado)
+
+    novo_valor_placa = entrada_placa_veiculo1.get()
+    novo_valor_modelo = entrada_modelo_veiculo1.get()
+    novo_valor_entrada = entrada_entrada_veiculo1.get()
+    novo_valor_saida = entrada_saida_veiculo1.get()
+
+    # Atualizar os valores no banco de dados
+    conn = sqlite3.connect(caminho_bd)
+    cursor = conn.cursor()
+    
+    comando_sql = "UPDATE veiculo SET Placa = ?, Modelo = ?, Hora_chegada = ?, Hora_saida = ? WHERE Placa = ? AND Modelo = ? AND Hora_chegada = ? AND Hora_saida = ?"
+    cursor.execute(comando_sql, (novo_valor_placa, novo_valor_modelo, novo_valor_entrada, novo_valor_saida, valores["values"][0], valores["values"][1], valores["values"][2], valores["values"][3]))
+    
+    conn.commit()
+    conn.close()
+    
+    # Atualizar os valores na Treeview
+    tree.set(selecionado, "Placa", novo_valor_placa)
+    tree.set(selecionado, "Modelo", novo_valor_modelo)
+    tree.set(selecionado, "Entrada", novo_valor_entrada)
+    tree.set(selecionado, "Saída", novo_valor_saida)
+    
+    messagebox.showinfo("Sucesso","Dados Atualizados!")
+    fechar_atualizar()
 
 criar_tela()
 tela.withdraw()
