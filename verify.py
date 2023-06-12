@@ -11,3 +11,15 @@ def login_existe(login):
     conn.close()
 
     return resultado > 0
+
+def placa_existe(placa):
+    conn = sqlite3.connect("Banco_PY.db")
+    cursor = conn.cursor()
+
+    comando = "SELECT COUNT(*) FROM veiculo WHERE placa = ?"
+    cursor.execute(comando, (placa,))
+    resultado = cursor.fetchone()[0]
+
+    conn.close()
+
+    return resultado > 0
