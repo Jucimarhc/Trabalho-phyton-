@@ -15,7 +15,8 @@ from tkinter import ttk
 #----------------------------Funções-------------------------------------------------#
 from verify import login_existe, placa_existe, cpf_existe, cpf_existe_nao
 from inserir import inserir_dado, inserir_veiculo, inserir_usuario
-from deletar import excluir_dado
+from deletar import excluir_dado, excluir_user
+from refresh import atualizar_treeview, pesquisa_dados
 
 def verificar_login():
     
@@ -63,31 +64,35 @@ def login():
     tela_login.title("Login")
     tela_login.geometry("400x300+500+200")
     tela_login.resizable(False, False)
+    tela_login.configure(bg="#225471")
 
     usuario_verify = tk.StringVar()
     senha_verify = tk.StringVar()
 
     custom_font = font.Font(family="Arial", size=12, weight="normal")
-    label2 = tk.Label(tela_login, text="Usuário", font=custom_font)
+    label2 = tk.Label(tela_login, text="Usuário", font=custom_font, bg="#225471", fg="#FFFFFF")
     label2.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
-    entrada_usuario = tk.Entry(tela_login, textvariable=usuario_verify)
+    entrada_usuario = tk.Entry(tela_login, textvariable=usuario_verify, bg="#D9D9D9", fg="#000716")
     entrada_usuario.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
     entrada_usuario.focus()
     
-    label3 = tk.Label(tela_login, text="Senha", font=custom_font)
+    label3 = tk.Label(tela_login, text="Senha", font=custom_font, bg="#225471", fg="#FFFFFF")
     label3.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
-    entrada_senha = tk.Entry(tela_login, textvariable=senha_verify, show='*')
+    entrada_senha = tk.Entry(tela_login, textvariable=senha_verify, show='*', bg="#D9D9D9", fg="#000716")
     entrada_senha.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
     usuario = entrada_usuario.get()
     senha = entrada_senha.get()
     
-    botao1 = tk.Button(tela_login, text="Login", fg="#FFFFFF", bg="#215470", activebackground="#FFFFFF", width=10, height=1, command=verificar_login)
+    botao1 = tk.Button(tela_login, text="Login", fg="#000716", bg="#D9D9D9", activebackground="#FFFFFF", width=10, height=1, command=verificar_login)
     botao1.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
     tela_login.bind('<Return>', pressionar_enter)
     tela_login.protocol("WM_DELETE_WINDOW", fechar)
 
 def criar_tela():
     global tela, tree, adicionar_dado, buscar_tabela_veiculo
+
+    def enter_press(event):
+        button_1.invoke()
 
     tela = Tk()
     tela.geometry("1280x720")
@@ -142,9 +147,10 @@ def criar_tela():
         image=button_image_1,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_1 clicked"),
+        command=lambda: (print("button_1 clicked"), pesquisa_dados(entry_1, tree)),
         relief="flat"
     )
+    tela.bind('<Return>', enter_press)
     button_1.place(
         x=871.0,
         y=79.0,
@@ -211,7 +217,6 @@ def criar_tela():
     tree.column("Saída", minwidth=0, width=140)
     tree.column("Dono", minwidth=0, width=179)
 
-
     def adicionar_dado():
         tree.delete(*tree.get_children())
 
@@ -239,10 +244,12 @@ def veiculo_tela():
         tela_veiculo.destroy()
     
     tela_veiculo = tk.Toplevel(master=tela)
-    tela_veiculo.title("Adicionar Admin")
+    tela_veiculo.title("Adicionar Veiculo")
     tela_veiculo.geometry("400x400+700+200")
     tela_veiculo.resizable(0,0)
     tela_veiculo.transient(tela)
+    tela_veiculo.configure(bg="#225471")
+
 
     entrada_placa_veiculo= tk.StringVar()
     entrada_modelo_veiculo = tk.StringVar()
@@ -250,35 +257,35 @@ def veiculo_tela():
     entrada_saida_veiculo = tk.StringVar()
     entrada_dono_veiculo = tk.StringVar()
 
-    label_veiculo1 = tk.Label(tela_veiculo, text="Placa")
+    label_veiculo1 = tk.Label(tela_veiculo, text="Placa", bg="#225471", fg="#FFFFFF")
     label_veiculo1.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
-    entrada_placa_veiculo = tk.Entry(tela_veiculo)
+    entrada_placa_veiculo = tk.Entry(tela_veiculo, bg="#D9D9D9", fg="#000716")
     entrada_placa_veiculo.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
 
-    label_veiculo2 = tk.Label(tela_veiculo, text="Modelo")
+    label_veiculo2 = tk.Label(tela_veiculo, text="Modelo", bg="#225471", fg="#FFFFFF")
     label_veiculo2.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
-    entrada_modelo_veiculo = tk.Entry(tela_veiculo)
+    entrada_modelo_veiculo = tk.Entry(tela_veiculo, bg="#D9D9D9", fg="#000716")
     entrada_modelo_veiculo.place(relx=0.5, rely=0.25, anchor=tk.CENTER)
 
-    label_veiculo3 = tk.Label(tela_veiculo, text="Horário de entrada")
+    label_veiculo3 = tk.Label(tela_veiculo, text="Horário de entrada", bg="#225471", fg="#FFFFFF")
     label_veiculo3.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
-    entrada_entrada_veiculo = tk.Entry(tela_veiculo)
+    entrada_entrada_veiculo = tk.Entry(tela_veiculo, bg="#D9D9D9", fg="#000716")
     entrada_entrada_veiculo.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
 
-    label_veiculo4 = tk.Label(tela_veiculo, text="Horário de saída")
+    label_veiculo4 = tk.Label(tela_veiculo, text="Horário de saída", bg="#225471", fg="#FFFFFF")
     label_veiculo4.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-    entrada_saida_veiculo = tk.Entry(tela_veiculo)
+    entrada_saida_veiculo = tk.Entry(tela_veiculo, bg="#D9D9D9", fg="#000716")
     entrada_saida_veiculo.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
 
-    label_veiculo5 = tk.Label(tela_veiculo, text="CPF do dono do Veículo")
+    label_veiculo5 = tk.Label(tela_veiculo, text="CPF do dono do Veículo", bg="#225471", fg="#FFFFFF")
     label_veiculo5.place(relx=0.5, rely=0.65, anchor=tk.CENTER)
-    entrada_dono_veiculo = tk.Entry(tela_veiculo)
+    entrada_dono_veiculo = tk.Entry(tela_veiculo, bg="#D9D9D9", fg="#000716")
     entrada_dono_veiculo.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
 
-    botao_veiculo1 = tk.Button(tela_veiculo, text="Salvar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=botao_veiculo)
+    botao_veiculo1 = tk.Button(tela_veiculo, text="Salvar", fg="#000716", width=10, height=1, bg="#D9D9D9", activebackground="#FFFFFF", command=botao_veiculo)
     botao_veiculo1.place(relx=0.2, rely=0.8)
 
-    botao_veiculo2 = tk.Button(tela_veiculo, text="Cancelar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=fechar_veiculo)
+    botao_veiculo2 = tk.Button(tela_veiculo, text="Cancelar", fg="#000716", width=10, height=1, bg="#D9D9D9", activebackground="#FFFFFF", command=fechar_veiculo)
     botao_veiculo2.place(relx=0.6, rely=0.8)
 
 def botao_veiculo():
@@ -317,10 +324,10 @@ def criar_menu():
 
     menubar.add_cascade(label="Adicionar", menu=add_menu)
     
-    tela.config(menu=menubar) 
+    tela.config(menu=menubar)
     
     add_menu.add_command(label="Adicionar Usuário", command=usuario_tela)
-    add_menu.add_command(label="Remover Usuário")
+    add_menu.add_command(label="Remover Usuário", command=remover_usuario_tela)
     add_menu.add_command(label="Adicionar Login", command=adicionar_tela)
     add_menu.add_command(label="Remover Login", command=deletar_tela)
     add_menu.add_command(label="Log Out", command=voltar_tela_anterior)   
@@ -373,30 +380,31 @@ def adicionar_tela():
     tela_adicionar.geometry("400x300+700+200")
     tela_adicionar.resizable(0,0)
     tela_adicionar.transient(tela)
+    tela_adicionar.configure(bg="#225471")
     
     entrada_senha1= tk.StringVar()
     entrada_nome1 = tk.StringVar()
     entrada_usuario1 = tk.StringVar()
 
-    label5 = tk.Label(tela_adicionar, text="Usuário")
+    label5 = tk.Label(tela_adicionar, text="Usuário", bg="#225471", fg="#FFFFFF")
     label5.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
-    entrada_usuario1 = tk.Entry(tela_adicionar)
+    entrada_usuario1 = tk.Entry(tela_adicionar, bg="#D9D9D9", fg="#000716")
     entrada_usuario1.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
 
-    label6 = tk.Label(tela_adicionar, text="Senha")
+    label6 = tk.Label(tela_adicionar, text="Senha", bg="#225471", fg="#FFFFFF")
     label6.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
-    entrada_senha1 = tk.Entry(tela_adicionar)
+    entrada_senha1 = tk.Entry(tela_adicionar, bg="#D9D9D9", fg="#000716")
     entrada_senha1.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
-    label7 = tk.Label(tela_adicionar, text="Nome")
+    label7 = tk.Label(tela_adicionar, text="Nome", bg="#225471", fg="#FFFFFF")
     label7.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
-    entrada_nome1 = tk.Entry(tela_adicionar)
+    entrada_nome1 = tk.Entry(tela_adicionar, bg="#D9D9D9", fg="#000716")
     entrada_nome1.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
 
-    botao3 = tk.Button(tela_adicionar, text="Salvar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=botao_teste)
+    botao3 = tk.Button(tela_adicionar, text="Salvar", fg="#000716", width=10, height=1, bg="#D9D9D9", activebackground="#FFFFFF", command=botao_teste)
     botao3.place(relx=0.2, rely=0.8)
 
-    botao3 = tk.Button(tela_adicionar, text="Cancelar", fg="#FFFFFF", width=10, height=1, command=fechar_adicionar, bg="#215470", activebackground="#FFFFFF")
+    botao3 = tk.Button(tela_adicionar, text="Cancelar", fg="#000716", width=10, height=1, command=fechar_adicionar, bg="#D9D9D9", activebackground="#FFFFFF")
     botao3.place(relx=0.6, rely=0.8)
 
 def deletar_tela():
@@ -410,15 +418,16 @@ def deletar_tela():
     tela_deletar.geometry("400x300+700+200")
     tela_deletar.resizable(0,0)
     tela_deletar.transient(tela)
+    tela_deletar.configure(bg="#225471")
     
     usuario_del = tk.StringVar()
     
-    label_del_nome = tk.Label(tela_deletar, text="Digite o login do usuário:")
+    label_del_nome = tk.Label(tela_deletar, text="Digite o login do usuário:", bg="#225471", fg="#FFFFFF")
     label_del_nome.place(relx=0.25, rely=0.1, anchor=tk.CENTER)
-    entrada_usuario_del = tk.Entry(tela_deletar, textvariable=usuario_del)
+    entrada_usuario_del = tk.Entry(tela_deletar, textvariable=usuario_del, bg="#D9D9D9", fg="#000716")
     entrada_usuario_del.place(relx=0.2, rely=0.2, anchor=tk.CENTER)
 
-    botao_enter_del = tk.Button(tela_deletar, text="Enter", fg="#FFFFFF", bg="#215470", activebackground="#FFFFFF", width=10, height=1, command=botao_del_teste)
+    botao_enter_del = tk.Button(tela_deletar, text="Enter", bg="#D9D9D9", fg="#000716", activebackground="#FFFFFF", width=10, height=1, command=botao_del_teste)
     botao_enter_del.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
     tela_deletar.bind('<Return>', pressionar_enter_delete)
 
@@ -431,6 +440,7 @@ def usuario_tela():
     tela_usuario.geometry("400x300+700+200")
     tela_usuario.resizable(0,0)
     tela_usuario.transient(tela)
+    tela_usuario.configure(bg="#225471")
 
     def fechar_usuario():
         tela_usuario.destroy()
@@ -439,25 +449,25 @@ def usuario_tela():
     entrada_nome_usuario = tk.StringVar()
     entrada_telefone = tk.StringVar()
 
-    label_CPF = tk.Label(tela_usuario, text="CPF")
+    label_CPF = tk.Label(tela_usuario, text="CPF", bg="#225471", fg="#FFFFFF")
     label_CPF.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
-    entrada_cpf = tk.Entry(tela_usuario)
+    entrada_cpf = tk.Entry(tela_usuario, bg="#D9D9D9", fg="#000716")
     entrada_cpf.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
 
-    label_nome = tk.Label(tela_usuario, text="Nome")
+    label_nome = tk.Label(tela_usuario, text="Nome", bg="#225471", fg="#FFFFFF")
     label_nome.place(relx=0.5, rely=0.3, anchor=tk.CENTER)
-    entrada_nome_usuario = tk.Entry(tela_usuario)
+    entrada_nome_usuario = tk.Entry(tela_usuario, bg="#D9D9D9", fg="#000716")
     entrada_nome_usuario.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
 
-    label_telefone = tk.Label(tela_usuario, text="Telefone")
+    label_telefone = tk.Label(tela_usuario, text="Telefone", bg="#225471", fg="#FFFFFF")
     label_telefone.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-    entrada_telefone = tk.Entry(tela_usuario)
+    entrada_telefone = tk.Entry(tela_usuario, bg="#D9D9D9", fg="#000716")
     entrada_telefone.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
 
-    botao_usuario1 = tk.Button(tela_usuario, text="Salvar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=botao_usuario)
+    botao_usuario1 = tk.Button(tela_usuario, text="Salvar", fg="#000716", width=10, height=1, bg="#D9D9D9", activebackground="#FFFFFF", command=botao_usuario)
     botao_usuario1.place(relx=0.2, rely=0.80)
 
-    botao_usuario2 = tk.Button(tela_usuario, text="Cancelar", fg="#FFFFFF", width=10, height=1, command=fechar_usuario, bg="#215470", activebackground="#FFFFFF")
+    botao_usuario2 = tk.Button(tela_usuario, text="Cancelar", fg="#000716", width=10, height=1, command=fechar_usuario, bg="#D9D9D9", activebackground="#FFFFFF")
     botao_usuario2.place(relx=0.6, rely=0.80)
 
 def botao_usuario():
@@ -481,6 +491,42 @@ def botao_usuario():
             messagebox.showinfo("Sucesso!","Novo usuário adicionado!")
             fechar_usuario()
 
+def remover_usuario_tela():
+    global tela_deletar_usuario, botao_enter_del_user, resultado_del_usuario, usuario_del_user, entrada_del_user
+
+    def pressionar_enter_delete(event):
+        botao_enter_del_user.invoke()
+
+    tela_deletar_usuario = tk.Toplevel(master=tela)
+    tela_deletar_usuario.title("Deletando Usuário")
+    tela_deletar_usuario.geometry("400x300+700+200")
+    tela_deletar_usuario.resizable(0,0)
+    tela_deletar_usuario.transient(tela)
+    tela_deletar_usuario.configure(bg="#225471")
+    
+    usuario_del_user = tk.StringVar()
+    
+    label_del_nome = tk.Label(tela_deletar_usuario, text="Digite o CPF do usuário:", bg="#225471", fg="#FFFFFF")
+    label_del_nome.place(relx=0.25, rely=0.1, anchor=tk.CENTER)
+    entrada_del_user = tk.Entry(tela_deletar_usuario, textvariable=usuario_del_user, bg="#D9D9D9", fg="#000716")
+    entrada_del_user.place(relx=0.2, rely=0.2, anchor=tk.CENTER)
+    botao_enter_del_user = tk.Button(tela_deletar_usuario, text="Enter", fg="#000716", bg="#d9d9d9", activebackground="#FFFFFF", width=10, height=1, command=botao_del_user)
+    botao_enter_del_user.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
+    tela_deletar_usuario.bind('<Return>', pressionar_enter_delete)
+
+def botao_del_user():
+    global deletar_cpf, usuario_del_user
+
+    deletar_cpf = usuario_del_user.get()
+
+    if deletar_cpf.strip() == '':
+        messagebox.showerror("Erro", "Por favor, preencha todos os campos.")
+    elif cpf_existe_nao(deletar_cpf):
+        excluir_user(deletar_cpf)
+        atualizar_treeview(tree)
+    else:
+        messagebox.showerror("Erro!", "Usuario não existente. Digite novamente.")
+    
 def atualizar_tela():
     global fechar_atualizar, tela_atualizar, entrada_placa_veiculo1, entrada_modelo_veiculo1, entrada_entrada_veiculo1, entrada_saida_veiculo1, entrada_dono_veiculo1
 
@@ -488,40 +534,41 @@ def atualizar_tela():
         tela_atualizar.destroy()
     
     tela_atualizar = tk.Toplevel(master=tela)
-    tela_atualizar.title("Adicionar Admin")
+    tela_atualizar.title("Atualizar Veiculo")
     tela_atualizar.geometry("400x400+700+200")
     tela_atualizar.resizable(0,0)
     tela_atualizar.transient(tela)
+    tela_atualizar.configure(bg="#225471")
 
     entrada_placa_veiculo1= tk.StringVar()
     entrada_modelo_veiculo1 = tk.StringVar()
     entrada_entrada_veiculo1 = tk.StringVar()
     entrada_saida_veiculo1 = tk.StringVar()
 
-    label_veiculo11 = tk.Label(tela_atualizar, text="Placa")
+    label_veiculo11 = tk.Label(tela_atualizar, text="Placa", bg="#225471", fg="#FFFFFF")
     label_veiculo11.place(relx=0.5, rely=0.05, anchor=tk.CENTER)
-    entrada_placa_veiculo1 = tk.Entry(tela_atualizar)
+    entrada_placa_veiculo1 = tk.Entry(tela_atualizar, bg="#D9D9D9", fg="#000716")
     entrada_placa_veiculo1.place(relx=0.5, rely=0.1, anchor=tk.CENTER)
 
-    label_veiculo21 = tk.Label(tela_atualizar, text="Modelo")
+    label_veiculo21 = tk.Label(tela_atualizar, text="Modelo", bg="#225471", fg="#FFFFFF")
     label_veiculo21.place(relx=0.5, rely=0.2, anchor=tk.CENTER)
-    entrada_modelo_veiculo1 = tk.Entry(tela_atualizar)
+    entrada_modelo_veiculo1 = tk.Entry(tela_atualizar, bg="#D9D9D9", fg="#000716")
     entrada_modelo_veiculo1.place(relx=0.5, rely=0.25, anchor=tk.CENTER)
 
-    label_veiculo31 = tk.Label(tela_atualizar, text="Horário de entrada")
+    label_veiculo31 = tk.Label(tela_atualizar, text="Horário de entrada", bg="#225471", fg="#FFFFFF")
     label_veiculo31.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
-    entrada_entrada_veiculo1 = tk.Entry(tela_atualizar)
+    entrada_entrada_veiculo1 = tk.Entry(tela_atualizar, bg="#D9D9D9", fg="#000716")
     entrada_entrada_veiculo1.place(relx=0.5, rely=0.4, anchor=tk.CENTER)
 
-    label_veiculo41 = tk.Label(tela_atualizar, text="Horário de saída")
+    label_veiculo41 = tk.Label(tela_atualizar, text="Horário de saída", bg="#225471", fg="#FFFFFF")
     label_veiculo41.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
-    entrada_saida_veiculo1 = tk.Entry(tela_atualizar)
+    entrada_saida_veiculo1 = tk.Entry(tela_atualizar, bg="#D9D9D9", fg="#000716")
     entrada_saida_veiculo1.place(relx=0.5, rely=0.55, anchor=tk.CENTER)
 
-    botao_veiculo11 = tk.Button(tela_atualizar, text="Salvar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=botao_atualizar)
+    botao_veiculo11 = tk.Button(tela_atualizar, text="Salvar", fg="#000716", width=10, height=1, bg="#D9D9D9", activebackground="#FFFFFF", command=botao_atualizar)
     botao_veiculo11.place(relx=0.2, rely=0.8)
 
-    botao_veiculo21 = tk.Button(tela_atualizar, text="Cancelar", fg="#FFFFFF", width=10, height=1, bg="#215470", activebackground="#FFFFFF", command=fechar_atualizar)
+    botao_veiculo21 = tk.Button(tela_atualizar, text="Cancelar", fg="#000716", width=10, height=1, bg="#D9D9D9", activebackground="#FFFFFF", command=fechar_atualizar)
     botao_veiculo21.place(relx=0.6, rely=0.8)
 
 def conferir():
