@@ -244,7 +244,7 @@ def veiculo_tela():
         tela_veiculo.destroy()
     
     tela_veiculo = tk.Toplevel(master=tela)
-    tela_veiculo.title("Adicionar Admin")
+    tela_veiculo.title("Adicionar Veiculo")
     tela_veiculo.geometry("400x400+700+200")
     tela_veiculo.resizable(0,0)
     tela_veiculo.transient(tela)
@@ -324,7 +324,7 @@ def criar_menu():
 
     menubar.add_cascade(label="Adicionar", menu=add_menu)
     
-    tela.config(menu=menubar) 
+    tela.config(menu=menubar)
     
     add_menu.add_command(label="Adicionar Usuário", command=usuario_tela)
     add_menu.add_command(label="Remover Usuário", command=remover_usuario_tela)
@@ -534,7 +534,7 @@ def atualizar_tela():
         tela_atualizar.destroy()
     
     tela_atualizar = tk.Toplevel(master=tela)
-    tela_atualizar.title("Adicionar Admin")
+    tela_atualizar.title("Atualizar Veiculo")
     tela_atualizar.geometry("400x400+700+200")
     tela_atualizar.resizable(0,0)
     tela_atualizar.transient(tela)
